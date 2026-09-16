@@ -1,0 +1,73 @@
+// Endpoint backend dari dokumen ENDPOINT.pdf
+export const API_BASE_URL = import.meta.env.VITE_API_URL
+
+export const getAuthHeaders = () => {
+  const token =
+    localStorage.getItem('token_admin') ||
+    localStorage.getItem('token') ||
+    ''
+
+  return token
+    ? { Authorization: `Bearer ${token}` }
+    : {}
+}
+
+export const API = {
+  jenisSampah: `${API_BASE_URL}/jenis-sampah/`,
+  createJenisSampah: `${API_BASE_URL}/jenis-sampah/create`,
+  updateJenisSampah: (id) => `${API_BASE_URL}/jenis-sampah/${id}`,
+  deleteJenisSampah: (id) => `${API_BASE_URL}/jenis-sampah/${id}`,
+
+  transaksiCreate: `${API_BASE_URL}/transaksi/create`,
+  transaksiHistory: `${API_BASE_URL}/transaksi/history`,
+
+  nasabah: `${API_BASE_URL}/admin/nasabah/`,
+  nasabahSearch: (search) =>
+    `${API_BASE_URL}/admin/nasabah/?search=${encodeURIComponent(search)}`,
+  nasabahDetail: (nik) => `${API_BASE_URL}/admin/nasabah/${nik}`,
+  nasabahUpdate: (nik) => `${API_BASE_URL}/admin/nasabah/${nik}`,
+  nasabahStatus: (nik) =>
+    `${API_BASE_URL}/admin/nasabah/${nik}/status`,
+  nasabahSaldo: (nik) =>
+    `${API_BASE_URL}/admin/nasabah/${nik}/saldo`,
+  nasabahSaldoHistory: (nik) =>
+    `${API_BASE_URL}/admin/nasabah/${nik}/saldo/riwayat`,
+
+  mitra: `${API_BASE_URL}/mitra-pengepul/`,
+  mitraCreate: `${API_BASE_URL}/mitra-pengepul/create`,
+  mitraDetail: (id) => `${API_BASE_URL}/mitra-pengepul/${id}`,
+  mitraHarga: (id) => `${API_BASE_URL}/mitra-pengepul/${id}/harga`,
+  transaksiJualMitra: `${API_BASE_URL}/transaksi-jual-mitra/create`,
+
+  pengumuman: `${API_BASE_URL}/pengumuman/`,
+  pengumumanCreate: `${API_BASE_URL}/pengumuman/create`,
+  pengumumanDetail: (id) => `${API_BASE_URL}/pengumuman/${id}`,
+
+  // AUTH
+  adminLogin: `${API_BASE_URL}/auth/admin/login`,
+  adminVerifyOtp: `${API_BASE_URL}/auth/admin/verify-otp`,
+  adminLogout: `${API_BASE_URL}/auth/admin/logout`,
+
+  superAdminLogin: `${API_BASE_URL}/auth/super-admin/login`,
+  superAdminVerifyOtp: `${API_BASE_URL}/auth/super-admin/verify-otp`,
+  superAdminLogout: `${API_BASE_URL}/auth/super-admin/logout`,
+}
+
+export async function parseResponse(response) {
+  const text = await response.text()
+  let data = null
+  try { data = text ? JSON.parse(text) : null } catch { data = text }
+  if (!response.ok) {
+    const message = data?.message || data?.error || data?.detail || 'Permintaan ke server gagal.'
+    throw new Error(message)
+  }
+  return data
+
+}
+
+export const chatHistory = (nik) => `${API_BASE_URL}/chat/history/${nik}`
+
+export const chatWsUrl = (nik, token) => {
+  const wsBase = API_BASE_URL.replace(/^http/, 'ws')
+  return `${wsBase}/chat/ws/admin/${nik}?token=${encodeURIComponent(token)}`
+}
