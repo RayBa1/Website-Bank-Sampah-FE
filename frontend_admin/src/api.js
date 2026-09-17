@@ -1,15 +1,14 @@
-// Endpoint backend dari dokumen ENDPOINT.pdf
 export const API_BASE_URL = import.meta.env.VITE_API_URL
 
-export const getAuthHeaders = () => {
-  const token =
-    localStorage.getItem('token_admin') ||
-    localStorage.getItem('token') ||
-    ''
+const ADMIN_TOKEN_KEY = 'admin_session_token'
 
-  return token
-    ? { Authorization: `Bearer ${token}` }
-    : {}
+export const getAdminToken = () => localStorage.getItem(ADMIN_TOKEN_KEY) || ''
+export const setAdminToken = (token) => localStorage.setItem(ADMIN_TOKEN_KEY, token)
+export const clearAdminToken = () => localStorage.removeItem(ADMIN_TOKEN_KEY)
+
+export const getAuthHeaders = () => {
+  const token = getAdminToken()
+  return token ? { Authorization: `Bearer ${token}` } : {}
 }
 
 export const API = {
@@ -19,7 +18,7 @@ export const API = {
   deleteJenisSampah: (id) => `${API_BASE_URL}/jenis-sampah/${id}`,
 
   transaksiCreate: `${API_BASE_URL}/transaksi/create`,
-  transaksiHistory: `${API_BASE_URL}/transaksi/history`,
+  transaksiHistory: `${API_BASE_URL}/transaksi/history-admin`,
 
   nasabah: `${API_BASE_URL}/admin/nasabah/`,
   nasabahSearch: (search) =>

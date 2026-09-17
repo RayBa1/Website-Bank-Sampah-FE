@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { API, parseResponse } from "../api";
+import { API, parseResponse, setAdminToken } from "../api";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -88,7 +88,7 @@ export default function Login() {
       // Backend balikin session_token (bukan access_token)
       const token = result?.session_token;
       if (token) {
-        localStorage.setItem("token_admin", token);
+        setAdminToken(token);
         localStorage.setItem("admin_role", result?.role || role);
       }
       navigate("/", { replace: true });

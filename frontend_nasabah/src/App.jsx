@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { getAccessToken } from './api'
 import Welcome from './pages/Welcome'
 import Register from './pages/Register'
 import Login from './pages/Login'
@@ -7,7 +8,7 @@ import Profile from './pages/Profile'
 import Placeholder from './pages/Placeholder'
 
 export default function App() {
-  const [page, setPage] = useState(localStorage.getItem('nasabah_access_token') ? 'dashboard' : 'welcome')
+  const [page, setPage] = useState(getAccessToken() ? 'dashboard' : 'welcome')
   const go = setPage
   if (page === 'welcome') return <Welcome onNavigate={go}/>
   if (page === 'register') return <Register onNavigate={go}/>

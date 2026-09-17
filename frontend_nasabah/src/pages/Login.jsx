@@ -4,10 +4,7 @@ import {
   Loader2,
 } from "lucide-react";
 import PhoneShell from "../components/PhoneShell";
-import {
-  API,
-  parseResponse,
-} from "../api";
+import { API, parseResponse, setAccessToken } from "../api";
 
 export default function Login({
   onNavigate,
@@ -81,10 +78,7 @@ export default function Login({
         result?.session_token;
 
       if (token) {
-        localStorage.setItem(
-          "nasabah_access_token",
-          token
-        );
+        setAccessToken(token);
       }
 
       // Simpan NIK untuk kebutuhan aplikasi

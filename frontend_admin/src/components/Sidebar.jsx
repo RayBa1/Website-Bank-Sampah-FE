@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   Recycle,
   ReceiptText,
@@ -9,7 +9,9 @@ import {
   Users,
   Building2,
   ChevronDown,
+  LogOut,
 } from "lucide-react";
+import { API, getAuthHeaders, clearAdminToken, parseResponse } from "../api";
 
 const items = [
   { to: "/", label: "Transaksi Nasabah", icon: ReceiptText },
@@ -37,9 +39,28 @@ const databaseItems = [
 
 export default function Sidebar() {
   const [databaseOpen, setDatabaseOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const role = localStorage.getItem("admin_role");
+    const url = role === "super_admin" ? API.superAdminLogout : API.adminLogout;
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: getAuthHeaders(),
+      });
+
+      await parseResponse(response);
+    } catch {
+
+    }
+    clearAdminToken();
+    localStorage.removeItem("admin_role");
+    navigate("/login", { replace: true });
+  };
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-20 w-full max-w-[260px] border-r border-slate-200 bg-white">
+    <aside className="fixed inset-y-0 left-0 z-20 flex w-full max-w-[260px] flex-col border-r border-slate-200 bg-white">
 
       {/* Logo */}
       <div className="flex flex-wrap items-center gap-3 px-6 py-6">
@@ -51,7 +72,7 @@ export default function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="space-y-1 px-3 pt-3">
+      <nav className="flex flex-1 flex-col space-y-1 px-3 pt-3">
 
         {/* Menu Utama */}
         {items.map(({ to, label, icon: Icon }) => (
@@ -114,6 +135,14 @@ export default function Sidebar() {
           )}
         </div>
 
+        {/* Logout */}
+        <button
+          onClick={handleLogout}
+          className="mt-auto flex min-h-11 w-full items-center gap-3 rounded-lg px-4 py-2 text-base text-red-500 transition hover:bg-red-50"
+        >
+          <LogOut size={18} className="shrink-0" />
+          <span>Logout</span>
+        </button>
       </nav>
     </aside>
   );

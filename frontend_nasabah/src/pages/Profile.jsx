@@ -6,11 +6,7 @@ import {
 } from "lucide-react";
 
 import PhoneShell from "../components/PhoneShell";
-import {
-  API,
-  getAuthHeaders,
-  parseResponse,
-} from "../api";
+import { API, getAuthHeaders, parseResponse, clearAccessToken } from "../api";
 
 export default function Profile({
   onNavigate,
@@ -74,11 +70,8 @@ export default function Profile({
       await parseResponse(response);
     } catch {}
 
-    localStorage.removeItem(
-      "nasabah_access_token"
-    );
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("token");
+
+    clearAccessToken();
     localStorage.removeItem("nasabah_nik");
 
     onLogout();

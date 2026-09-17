@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import PageHeader from "../components/PageHeader";
 import { API, getAuthHeaders, chatHistory, chatWsUrl } from "../api";
+import { getAdminToken } from "../api";
 
 export default function LiveChat() {
   // -----------------------------
@@ -105,7 +106,7 @@ export default function LiveChat() {
       }
 
       // 2. Buka koneksi WebSocket untuk realtime
-      const token = localStorage.getItem("token_admin");
+      const token = getAdminToken();
 
       if (!token) {
         setError("Sesi admin tidak ditemukan, silakan login ulang.");
