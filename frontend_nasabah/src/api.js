@@ -5,6 +5,7 @@ export const API = {
   login: `${API_BASE_URL}/auth/nasabah/login`,
   profile: `${API_BASE_URL}/nasabah/profile`,
   logout: `${API_BASE_URL}/auth/nasabah/logout`,
+  chatHistory: `${API_BASE_URL}/chat/history-nasabah`,
 }
 
 
@@ -28,4 +29,9 @@ export async function parseResponse(response) {
     throw new Error(message)
   }
   return data
+}
+
+export const chatWsUrl = (token) => {
+  const wsBase = API_BASE_URL.replace(/^http/, 'ws')
+  return `${wsBase}/chat/ws/nasabah?token=${encodeURIComponent(token)}`
 }

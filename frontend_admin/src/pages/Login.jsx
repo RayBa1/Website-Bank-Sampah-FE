@@ -90,6 +90,7 @@ export default function Login() {
       if (token) {
         setAdminToken(token);
         localStorage.setItem("admin_role", result?.role || role);
+        localStorage.setItem("admin_username", result?.username || username);
       }
       navigate("/", { replace: true });
     } catch (err) {

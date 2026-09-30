@@ -4,8 +4,13 @@ const ADMIN_TOKEN_KEY = 'admin_session_token'
 
 export const getAdminToken = () => localStorage.getItem(ADMIN_TOKEN_KEY) || ''
 export const setAdminToken = (token) => localStorage.setItem(ADMIN_TOKEN_KEY, token)
-export const clearAdminToken = () => localStorage.removeItem(ADMIN_TOKEN_KEY)
+export const clearAdminToken = () => {
+  localStorage.removeItem(ADMIN_TOKEN_KEY)
+  localStorage.removeItem('admin_username')
+}
 
+export const getAdminUsername = () => localStorage.getItem('admin_username') || ''
+export const setAdminUsername = (username) => localStorage.setItem('admin_username', username)
 export const getAuthHeaders = () => {
   const token = getAdminToken()
   return token ? { Authorization: `Bearer ${token}` } : {}
@@ -50,6 +55,9 @@ export const API = {
   superAdminLogin: `${API_BASE_URL}/auth/super-admin/login`,
   superAdminVerifyOtp: `${API_BASE_URL}/auth/super-admin/verify-otp`,
   superAdminLogout: `${API_BASE_URL}/auth/super-admin/logout`,
+  chatConversations: `${API_BASE_URL}/chat/conversations`,
+  chatClaim: (nik) => `${API_BASE_URL}/chat/claim/${nik}`,
+  chatRelease: (nik) => `${API_BASE_URL}/chat/release/${nik}`,
 }
 
 export async function parseResponse(response) {
